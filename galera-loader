@@ -101,8 +101,21 @@ if [ -e /etc/mysql/conf.d/runtime.cnf ]; then
 	run
 fi
 
-if [ -z "$PEERS" ]; then
-	log "0 [Warning] WSREP: PEERS undefined, this node is starting in bootstrap mode."
+if [ -z "$LOCAL_NET" ]; then
+	if [ -z "$PEERS" ]; then
+		log "0 [Warning] WSREP: PEERS undefined, this node is starting in bootstrap mode."
+	fi
+else
+	log "0 [Note] Attempting to automatically discover peers on the local network."
+	
+	# Do you like race conditions?
+	sleep $((RANDOM % 5))
+	
+	PEERS+=$(nmap -p 4567 "$LOCAL_NET" | grep -B 4 open | grep "scan report for" | awk '{print $5}' | tr '\n' ',')
+
+	if [ -z "$PEERS" ]; then
+		log "0 [Warning] WSREP: No local PEERS found, this node is starting in bootstrap mode."
+	fi
 fi
 
 [ ! -d /var/log/mysql ] && mkdir -pv /var/log/mysql
