@@ -12,7 +12,8 @@ ENV PEERS="" \
     BUFFER_POOL_SIZE=102m \
     MAX_CONNECTIONS=151 \
     BACKUP_DELAY=1h \
-    BACKUP_COUNT=5
+    BACKUP_COUNT=5 \
+    LOCAL_NET=""
 
 # downloaded from http://releases.galeracluster.com/GPG-KEY-galeracluster.com
 ADD GPG-KEY-galeracluster.com /tmp/
