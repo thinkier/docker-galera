@@ -111,10 +111,12 @@ else
 	# Do you like race conditions?
 	sleep $((RANDOM % 5))
 	
-	PEERS+=$(nmap -p 4567 "$LOCAL_NET" | grep -B 4 open | grep "scan report for" | awk '{print $5}' | tr '\n' ',')
+	PEERS+=$(nmap -p 4567 "$LOCAL_NET" | grep -B 4 open | grep "scan report for" | awk '{print $5}' | tr '\n' ',' | head -c -1)
 
 	if [ -z "$PEERS" ]; then
-		log "0 [Warning] WSREP: No local PEERS found, this node is starting in bootstrap mode."
+		log "0 [Warning] WSREP: No local peers found, this node is starting in bootstrap mode."
+	else
+		log "0 [Info] Found the following peers: $PEERS"
 	fi
 fi
 
