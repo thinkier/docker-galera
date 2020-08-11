@@ -106,12 +106,15 @@ if [ -z "$LOCAL_NET" ]; then
 		log "0 [Warning] WSREP: PEERS undefined, this node is starting in bootstrap mode."
 	fi
 else
-	log "0 [Note] Attempting to automatically discover peers on the local network."
+	log "0 [Note] Attempting to automatically discover peers on the local network ($LOCAL_NET)."
 	
 	# Do you like race conditions?
+	log "0 [Debug] Sleeping for a few seconds to prevent races."
 	sleep $((RANDOM % 5))
 	
+	log "0 [Debug] Attempting to scan network now."
 	PEERS+=$(nmap -p 4567 "$LOCAL_NET" | grep -B 4 open | grep "scan report for" | awk '{print $5}')
+	log "0 [Debug] Network scan completed."
 
 	if [ -z "$PEERS" ]; then
 		log "0 [Warning] WSREP: No local peers found, this node is starting in bootstrap mode."
