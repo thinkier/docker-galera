@@ -42,4 +42,4 @@ RUN dpkg -i percona-release_0.1-6.jessie_all.deb \
 ADD galera-loader /galera-loader
 
 RUN apt-get update
-RUN apt-get install nmap
+RUN apt-get install nmap --yes
