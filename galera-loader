@@ -118,10 +118,12 @@ else
 	else
 		NODE_COUNT=$(echo "$PEERS" | wc -l)
 		if (( $NODE_COUNT > 1 )); then
-			PEERS=$(echo "$PEERS" | tail -n $((RANDOM % ($NODE_COUNT - 1))))
-		
+			PEERS=$(echo "$PEERS" | head -n $((RANDOM % $NODE_COUNT + 1)) | tail -n 1)
+
 			log "0 [Info] Selecting a random peer out of the list: $PEERS"
 		else
+			PEERS=""
+
 			log "0 [Warning] Did not discover more than 1 peer, assuming that's self. This node will start in bootstrapping mode."
 		fi
 	fi
